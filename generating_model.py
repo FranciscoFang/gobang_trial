@@ -58,8 +58,8 @@ while i<epochs:
             # print_board(show_board(board))
             steps_count += 1
             black_play = False
-            if check_win_all(board) != 0: break
-            if black_play == 0: break
+            # if check_win_all(board) != 0: break
+            # if black_play == 0: break
             break
         if check_win_all(board) != 0: break
         print ("到白方了")
@@ -72,8 +72,8 @@ while i<epochs:
             # print_board(show_board(board))
             steps_count += 1
             black_play = True
-            if check_win_all(board) != 0: break
-            if black_play == True: break
+            # if check_win_all(board) != 0: break
+            # if black_play == True: break
             break
         if check_win_all(board) != 0: break
     if check_win_all(board) == 1:
