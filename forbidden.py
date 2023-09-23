@@ -42,19 +42,6 @@ def check_long_line(board) -> bool:
 #先查长连，然后查5，然后查44，最后查33
 
 def border_extend(board):
-    border = []
-    border_up = ['Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z']
-    border_inside = ['Z', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'Z']
-    border.append([border_up])
-    for i in range(15): 
-        border.append([border_inside])
-    border.append([border_up])
-    for x in range(15):
-        for y in range(15):
-            border[x+1][y+1] = board[x][y]
-    return border
-
-def border_extend(board):
     border = [['Z'] * 17] + [ ['Z', *row, 'Z'] for row in board] + [['Z'] * 17]
     return border
     
