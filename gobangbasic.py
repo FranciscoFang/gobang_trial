@@ -1,3 +1,5 @@
+import forbidden
+
 def board_transform(board):
     new_board = [['O']*15 for line in range(15)]
     for x in range(15):
@@ -10,29 +12,17 @@ def board_transform(board):
 def check_win(new_board) -> bool:
     for list_str in new_board:
         if ''.join(list_str).find('B'*5) != -1:
-            print ('Black Wins')
+            print ('Black Wins.')
             return True
         elif ''.join(list_str).find('W'*5) != -1:
-            print ('White wins')
+            print ('White wins.')
             return True
         else:
             pass
     return False
 
-# def check_win_left(new_board) -> bool:
-#     for list_str in new_board:
-#         print(''.join(list_str).find('B'*5))
-#         if ''.join(list_str).find('B'*5) != -1:
-#             print ('Black Wins')
-#             return True
-#         elif ''.join(list_str).find('W'*5) != -1:
-#             print ('White wins')
-#             return True
-#         else:
-#             pass
-#     return False
-
 def check_win_horizonal(board):
+    # print (board)
     return check_win(board)
     
 def check_win_vertical(board):
@@ -43,7 +33,7 @@ def check_win_leftcross(board):
     for x in range(15):
         for y in range(15):
             board_left[x+y].append(board[x][y])
-    print (board_left)
+    # print (board_left)
     return check_win(board_left)
 
 def check_win_rightcross(board):
@@ -83,6 +73,7 @@ if __name__ == '__main__':
         if i%2 == 0:
             while True:
                 print_board(board_transform(board))
+                print (i)
                 print ('Black turn to play.')
                 # take_action (board, end_tag)
                 try:
@@ -91,19 +82,40 @@ if __name__ == '__main__':
                 except ValueError:
                     continue
                 if set_stone(x, y, 1, board):
-                    board[x][y] = 1
-                    if check_win_all(board_transform(board)):
+                    board[x][y] = 1 
+                    checker = board_transform(board)
+                    if forbidden.long_forbidden(x, y, checker): # 检查长连
+                        end_tag = True 
+                        print ("Black restriction violated(long). White wins.")
+                        break
+                    else:
+                        pass
+                    if check_win_all(checker): # 检查黑赢
                         end_tag = True
                         break
                     else:
+                        pass
+                    if forbidden.double_4(x, y, checker): # 检查四四
+                        end_tag = True 
+                        print ("Black restriction violated(4-4). White wins.")
                         break
+                    else:
+                        pass
+                    if forbidden.double_3(x, y, checker): # 检查三三
+                        end_tag = True 
+                        print ("Black restriction violated(3-3). White wins.")
+                        break
+                    else:
+                        pass
                 else:
                     continue
+                break
             if end_tag:
                 break
         else:
             while True:
                 print_board(board_transform(board))
+                print (i)
                 print ('White turn to play.')
                 try:
                     y = int(input('Horizonal coordination 1~15: '))
