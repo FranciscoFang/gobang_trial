@@ -1,6 +1,6 @@
 from search_chain import search_for_4, search_for_3 
 
-def long_forbidden(x, y, board) -> bool:
+def long_forbidden(board) -> bool:
     if long_line(board) == True:
         return True # 长连禁手成立
     else:
@@ -103,10 +103,11 @@ def chain_query_rightcross(x, y, border_extend):
 
 def double_4(x, y, board) -> bool:
     check_tag = 0
-    check_tag += search_for_4(chain_query_horizonal(x, y, board))
-    check_tag += search_for_4(chain_query_vertical(x, y, board))
-    check_tag += search_for_4(chain_query_leftcross(x, y, board))
-    check_tag += search_for_4(chain_query_rightcross(x, y, board))
+    extended_board = border_extend(board)
+    check_tag += search_for_4(chain_query_horizonal(x, y, extended_board))
+    check_tag += search_for_4(chain_query_vertical(x, y, extended_board))
+    check_tag += search_for_4(chain_query_leftcross(x, y, extended_board))
+    check_tag += search_for_4(chain_query_rightcross(x, y, extended_board))
     if check_tag > 1:
         return True
     else:
@@ -114,10 +115,11 @@ def double_4(x, y, board) -> bool:
 
 def double_3(x, y, board):
     check_tag = 0
-    check_tag += search_for_3(chain_query_horizonal(x, y, board))
-    check_tag += search_for_3(chain_query_vertical(x, y, board))
-    check_tag += search_for_3(chain_query_leftcross(x, y, board))
-    check_tag += search_for_3(chain_query_rightcross(x, y, board))
+    extended_board = border_extend(board)
+    check_tag += search_for_3(chain_query_horizonal(x, y, extended_board))
+    check_tag += search_for_3(chain_query_vertical(x, y, extended_board))
+    check_tag += search_for_3(chain_query_leftcross(x, y, extended_board))
+    check_tag += search_for_3(chain_query_rightcross(x, y, extended_board))
     if check_tag > 1:
         return True
     else:
