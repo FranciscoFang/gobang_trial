@@ -62,12 +62,10 @@ def compare_board(return_board, game_board) -> bool:
 def combine_board(board, return_board):
     for x in range(15):
         for y in range(15):
-            # print (return_board)
             board[x][y] += return_board[x][y]
     return board
 
 def divide_board(board):
-    # matrix_0 = [[random.randint(-1,1) for i in range(15)] for i in range(15)]
     output_matrix = [[[]*2 for i in range(15) ] for i in range(15)]
     for x in range(15):
         for y in range(15):
