@@ -20,7 +20,7 @@ def ML_fit_2(allgame, allaction):
 model1, model2 = make_models()
 
 # if __name__ == '__main__':
-epochs = 1 #as your wish
+epochs = 50 #as your wish
 black_wins = 0
 white_wins = 0
 draw_game = 0
