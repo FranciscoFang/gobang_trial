@@ -19,6 +19,7 @@ def make_answer_board_white(argmax_index):
     return answer_board, x, y
 
 def find_max_values_black(prediction, board, one_step):
+    # 取 10 次迭代
     index_sort = np.argsort(np.array(prediction[0]).flatten())
     i = -1
     while True:
@@ -92,6 +93,7 @@ def machine_1(board, model1):
                     one_step[x][y] = 0
                 break
     prediction_black = model1.predict([divide_board(board)])
+    # 10~100次采样，取总值（均值）最大的。
     one_step = copy.deepcopy(board)
     if np.argmax(prediction_black[0]) != -1:
         # print ("黑棋：有最大值")
@@ -100,9 +102,9 @@ def machine_1(board, model1):
         return return_board, decision_board_black
     else:
         print("============黑棋：没有最大值=================")
-        print (print_board(prediction_black[0]))
-        print (print_board(show_board(board)))
-        print (np.argmax(prediction_black[0]))
+        # print (print_board(prediction_black[0]))
+        # print (print_board(show_board(board)))
+        # print (np.argmax(prediction_black[0]))
         # sleep()
         return_board, decision_board_black = machine_1_random(board)
         return return_board, decision_board_black
@@ -131,9 +133,9 @@ def machine_2(board, model2):
         return answer_board, decision_board_white
     else:
         print("============白棋：没有最大值=================")
-        print (print_board(prediction_white[0]))
-        print (print_board(show_board(board)))
-        print (np.argmax(prediction_white[0]))
+        # print (print_board(prediction_white[0]))
+        # print (print_board(show_board(board)))
+        # print (np.argmax(prediction_white[0]))
         # sleep()
         answer_board, decision_board_white = machine_2_random(board)
         return answer_board, decision_board_white

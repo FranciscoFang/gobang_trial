@@ -21,8 +21,8 @@ model1, model2 = make_models()
 
 if __name__ == '__main__':
     model1, model2 = make_models()
-    logs = open('logs.txt', 'a')
-    epochs = 2020 #as your wish
+    logs = open('logs.txt', 'w')
+    epochs = 10 #as your wish
     black_wins = 0
     white_wins = 0
     draw_game = 0
@@ -34,19 +34,19 @@ if __name__ == '__main__':
     while i<epochs:
         i+=1
         board=[[0]*15 for line in range(15)]
-        board[7][7] = 1
+        # board[7][7] = 1
         allgame_black=[]
         allaction_black=[]
         allgame_white=[]
         allaction_white=[]
         black_play = True
-        steps_count = 1
+        steps_count = 0
         while check_win_black(board) or check_win_white(board) == False:
-            if len(sum_allgame_black) > 50000:
+            if len(sum_allgame_black) > 1000:
                 sum_allgame_black.pop(0)
                 sum_allaction_black.pop(0)
                 # print("删除一个黑方旧样本")
-            if len(sum_allgame_white) > 50000:
+            if len(sum_allgame_white) > 1000:
                 sum_allgame_white.pop(0)
                 sum_allaction_white.pop(0)
                 # print("删除一个白方旧样本")
@@ -55,16 +55,14 @@ if __name__ == '__main__':
                 # print ("黑走:", steps_count)
                 # print (check_win_black(board), black_play)
                 black_play = False
-                if i<=2000 :#first x random games
-                    return_board_black, decision_board_black = machine_1_random(board)
-                else:
-                    return_board_black, decision_board_black = machine_1(board, model1)
-                # if return_board_black == []: print("黑棋返回为空")
-                # if ''.join(str(return_board_black)).find('1') == -1 : print("检查黑棋是否在下子")
+                return_board_black, decision_board_black = machine_1(board, model1)
+                if return_board_black == []: print("黑棋返回为空")
+                if ''.join(str(return_board_black)).find('1') == -1 : print("检查黑棋是否在下子")
                 allgame_black += [divide_board(board)]
                 allaction_black += [decision_board_black]
                 board = combine_board(board, return_board_black)
                 steps_count += 1
+                # print ("黑完成一步")
                 # print (steps_count)
                 if check_win_black(board) == True: break #黑棋赢了跳出
                 if check_win_black(board) == False and check_win_white(board) == False and steps_count >= 225: break #平局跳出
@@ -73,16 +71,14 @@ if __name__ == '__main__':
                 # print ("白走:", steps_count)
                 # print (check_win_white(board), black_play)
                 black_play = True
-                if i<=2000 : #first x random games
-                    return_board_white, decision_board_white = machine_2_random(board)
-                else:
-                    return_board_white, decision_board_white = machine_2(board, model2)
-                # if return_board_white == []: print("白棋返回为空")
-                # if ''.join(str(return_board_white)).find('-1') == -1 : print("检查白棋是否在下子")
+                return_board_white, decision_board_white = machine_2(board, model2) #
+                if return_board_white == []: print("白棋返回为空")
+                if ''.join(str(return_board_white)).find('-1') == -1 : print("检查白棋是否在下子")
                 allgame_white += [divide_board(board)]
                 allaction_white += [decision_board_white]
                 board = combine_board(board, return_board_white)
                 steps_count += 1
+                # print ("白完成一步")
                 # print (steps_count)
                 if check_win_white(board) == True: break #白棋赢了跳出
                 if check_win_black(board) == False and check_win_white(board) == False and steps_count >= 225: break #平局跳出
@@ -91,58 +87,33 @@ if __name__ == '__main__':
                 print (steps_count)
                 draw_game += 1
                 print ("平局+1")
-                # print (print_board(show_board(board)))
                 break
             if check_win_black(board) == True: #全部跳出后判断黑棋是否赢
                 sum_allgame_black += allgame_black
                 sum_allaction_black += allaction_black
                 black_wins += 1
                 print ("黑赢+1", "黑AI获胜次数：", black_wins, "白AI获胜次数：", white_wins, "平局次数：", draw_game, "", file=logs)
-                if i == 2000:
-                    print ("黑AI获胜次数：", black_wins, "白AI获胜次数：", white_wins, "平局次数：", draw_game, "")
-                    print ("%d games, start black traing." % i)
-                    ML_fit_1(np.asarray(sum_allgame_black), np.asarray(sum_allaction_black))
-                    print ("%d games, start white traing." % i)
-                    ML_fit_2(np.asarray(sum_allgame_white), np.asarray(sum_allaction_white))
-                    print ("%d games training done." % i)
-                    sum_allgame_black = []
-                    sum_allaction_black = []
-                    sum_allgame_white = []
-                    sum_allaction_white = []
-                    print ("cleared %d games cache." % i)
-                if i >= 2001:
-                    print ("from black training")
-                    ML_fit_1(np.asarray(sum_allgame_black), np.asarray(sum_allaction_black))
-                    sum_allgame_black = []
-                    sum_allaction_black = []
-                    print ("from black training: done")
-                # ML_fit_2(np.asarray(sum_allgame_white), np.asarray(sum_allaction_white))
+                # print ("from black training")
+                # ML_fit_1(np.asarray(sum_allgame_black), np.asarray(sum_allaction_black))
+                # sum_allgame_black = []
+                # sum_allaction_black = []
+                # print ("from black training: done")
+                # # ML_fit_2(np.asarray(sum_allgame_white), np.asarray(sum_allaction_white))
                 break
             if check_win_white(board) == True: #全部跳出后判断黑棋是否赢
                 sum_allgame_white += allgame_white
                 sum_allaction_white += allaction_white
                 white_wins += 1
                 print ("白赢+1", "黑AI获胜次数：", black_wins, "白AI获胜次数：", white_wins, "平局次数：", draw_game, "", file=logs)
-                if i == 2000:
-                    print ("黑AI获胜次数：", black_wins, "白AI获胜次数：", white_wins, "平局次数：", draw_game, "")
-                    print ("%d games, start black traing." % i)
-                    ML_fit_1(np.asarray(sum_allgame_black), np.asarray(sum_allaction_black))
-                    print ("%d games, start white traing." % i)
-                    ML_fit_2(np.asarray(sum_allgame_white), np.asarray(sum_allaction_white))
-                    print ("%d games training done." % i)
-                    sum_allgame_black = []
-                    sum_allaction_black = []
-                    sum_allgame_white = []
-                    sum_allaction_white = []
-                    print ("cleared %d games cache." % i)
-                if i >= 2001:
-                    print ("from white training")
-                    ML_fit_2(np.asarray(sum_allgame_white), np.asarray(sum_allaction_white))
-                    sum_allgame_white = []
-                    sum_allaction_white = []
-                    print ("from white training: done")
+            if i%50 == 0:
+                # 选择其中胜率较高的一方，然后黑棋化，训练。每50次双方都采取相同策略。
+                # print ("from white training")
+                # ML_fit_2(np.asarray(sum_allgame_white), np.asarray(sum_allaction_white))
+                # sum_allgame_white = []
+                # sum_allaction_white = []
+                # print ("from white training: done")
                 # ML_fit_1(np.asarray(sum_allgame_black), np.asarray(sum_allaction_black))
                 break
-        print ("局目总数：", i, "黑AI获胜次数：", black_wins, "白AI获胜次数：", white_wins, "平局次数：", draw_game, "", file=logs)
+        # if i%10 == 0: print ("局目总数：", i, "黑AI获胜次数：", black_wins, "白AI获胜次数：", white_wins, "平局次数：", draw_game)
     logs.close()
     print("黑AI获胜次数：",black_wins,"白AI获胜次数：",white_wins,"平局次数：",draw_game)
