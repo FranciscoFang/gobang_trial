@@ -70,7 +70,7 @@ def machine_1(board, model1):
             if board[i][j] == 0:
                 answer_board[i][j] = 1
                 break
-        print (print_board(answer_board))
+        # print (print_board(answer_board))
         return answer_board
 
 def machine_2(board, model2):
@@ -99,5 +99,5 @@ def machine_2(board, model2):
             if board[i][j] == 0:
                 answer_board[i][j] = -1
                 break
-        print (print_board(answer_board))
+        # print (print_board(answer_board))
         return answer_board
